@@ -1,5 +1,14 @@
+from faulthandler import disable
 import tkinter as tk
 from tkinter import ttk
+import pronosticador as pr
+import numpy as np
+import pandas as pd
+
+epocas = 10
+
+X_train, X_test, y_train, y_test = pr.cargar_datos('2019_siniestros_de_transito_bdd.csv')
+modelo = pr.entrenar_modelo(X_train, y_train, epocas)
 
 WIN_WIDTH = 430
 WIN_HEIGHT = 575
@@ -88,10 +97,19 @@ def delInfo():
     listDia.current(0)
     listHora.current(0)
 def getInfo():
-    inCanton = cantones.get(listCanton.get())
-    inMes = listMes.current()+1
-    inDia = listDia.current()+1
-    inHora = listHora.current()
-    print(inCanton,inMes,inDia,inHora)
+    t.delete("1.0", "end")
+    inCanton = int(cantones.get(listCanton.get()))
+    inMes = int(listMes.current()+1)
+    inDia = int(listDia.current()+1)
+    inHora = int(listHora.current())
+    x_input = pd.DataFrame(np.array([[inMes , inDia, inHora , inCanton, 1]]), columns=["MES", "DIA", "HORA", "CANTON", "INTERCEPT"])
+    y_pred = modelo.predict_proba(x_input)
+    probabilidad = round(y_pred[:, 1][0]*100, 2)
+    message=""
+    if(probabilidad>50):
+        message = "La probabilidad de que este accidente ocurra por exceso de velocidad es de: {}%".format(probabilidad)
+    else:
+        message = "No es probable que este accidente por exceso de velocidad ocurra"
+    t.insert(tk.END, message)
 window.mainloop()
 
