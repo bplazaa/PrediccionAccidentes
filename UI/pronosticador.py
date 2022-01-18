@@ -41,5 +41,9 @@ def entrenar_modelo(X_train, y_train, epocas):
         modelo.fit(X_train, y_train)
     return modelo
 
+def obtener_estadisticas(y_test, y_pred):
+  precision = metrics.precision_score(y_test, y_pred)
+  exactitud = metrics.accuracy_score(y_test, y_pred)
+  return precision, exactitud
 
 

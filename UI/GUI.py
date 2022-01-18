@@ -9,6 +9,8 @@ epocas = 10
 
 X_train, X_test, y_train, y_test = pr.cargar_datos('2019_siniestros_de_transito_bdd.csv')
 modelo = pr.entrenar_modelo(X_train, y_train, epocas)
+y_pred = modelo.predict(X_test)
+precision, exactitud = pr.obtener_estadisticas(y_test, y_pred)
 
 WIN_WIDTH = 430
 WIN_HEIGHT = 575
@@ -90,6 +92,15 @@ t = tk.Text(frame, height = 10, width=48, bd='5', wrap=tk.WORD, yscrollcommand=v
 t.insert(tk.END, p1.get())
 t.grid(sticky='W',row=12, column=0, columnspan=4)
 v.config(command=t.yview)
+
+#modelo field
+label2 = tk.Label(frame,text='Datos del modelo', bd='1',fg='black', font='Helvetica 9 bold').grid(sticky = 'W',pady=10,row=13, column=0,columnspan=1)
+v = tk.Scrollbar(frame, orient='vertical')
+t2 = tk.Text(frame, height = 1, width=48, bd='5', wrap=tk.WORD, yscrollcommand=v.set, borderwidth=2, relief="groove")
+msgt2 = "Precisión: " + str(round(precision*100,2)) +  "% Exactitud: " + str(round(exactitud*100,2)) + "%"
+t2.insert(tk.END, msgt2)
+t2.grid(sticky='W',row=14, column=0, columnspan=4)
+t2.configure(state="disabled")
 
 def delInfo():
     listCanton.current(0)
