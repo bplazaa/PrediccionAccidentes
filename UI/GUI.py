@@ -1,4 +1,3 @@
-from faulthandler import disable
 import tkinter as tk
 from tkinter import ttk
 import pronosticador as pr
